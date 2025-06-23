@@ -130,3 +130,5 @@ EMAIL_HOST_USER = 'ekundayoobayomi2@gmail.com' # The email address that will sen
 
 # IMPORTANT: Use your 16-character App Password here, NOT your regular Gmail password.
 EMAIL_HOST_PASSWORD = 'eadh pirm ggto amdx' 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
