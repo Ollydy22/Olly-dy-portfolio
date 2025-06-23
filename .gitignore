@@ -1,0 +1,41 @@
+
+
+
+
+Django stuff
+
+*.log
+
+*.pot
+
+*.pyc
+
+pycache/
+
+local_settings.py
+
+db.sqlite3
+
+Env
+
+.env
+
+venv/
+
+env/
+
+IDE files
+
+.idea/
+
+.vscode/
+
+Static files
+
+/static/
+
+Media files
+
+/media/
+
+

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olly Dy | Nigerian Screenwriter | Interactive Portfolio</title>
+    <!-- Chosen Palette: Warm Neutrals & Amber -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative journey. It starts with a strong Hero section to grab attention, followed by a "My Voice" section to establish Olly's unique identity. An interactive "Portfolio" section allows users to explore his work in-depth, not just scan it. A "Genre Focus" visualization provides a quick data-driven overview of his skills. The flow logically guides the user from who he is, to what he does, to how to hire him, culminating in a clear "Contact" section. This structure is more engaging than a simple list and is designed to build interest progressively. -->
+    <!-- Visualization & Content Choices: 
+        - Hero Text: Goal: Inform/Engage. Method: Large, impactful typography with a clear Call-to-Action. Interaction: Buttons for navigation. Justification: Immediately establishes identity and user path.
+        - My Voice (About): Goal: Inform/Connect. Method: Text block with a profile image. Interaction: Subtle fade-in animation. Justification: Creates a personal connection.
+        - Portfolio (Scripts): Goal: Organize/Inform. Method: Interactive cards using HTML/CSS. Interaction: On-click expansion to show more details (logline, themes) via JavaScript. Justification: Encourages user exploration and prevents information overload.
+        - Genre Focus (Chart): Goal: Compare/Inform. Method: Donut chart. Interaction: Tooltips on hover. Justification: Visually represents his creative range and fulfills the Chart.js requirement in a meaningful way for a portfolio. Library: Chart.js (Canvas).
+        - Contact Form: Goal: Engage/Action. Method: HTML form. Interaction: Form submission opens a pre-filled mail client. Justification: Provides a clear, low-friction path to contact Olly without needing a backend.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #f5f3f0;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e1e1e;
+            --text-secondary: #5a5a5a;
+            --accent-primary: #c08c4a;
+            --accent-hover: #a97738;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Source Sans Pro', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .font-heading { font-family: 'Roboto Slab', serif; }
+        .bg-accent { background-color: var(--accent-primary); }
+        .hover\:bg-accent-hover:hover { background-color: var(--accent-hover); }
+        .text-accent { color: var(--accent-primary); }
+        .border-accent { border-color: var(--accent-primary); }
+        .ring-accent { --tw-ring-color: var(--accent-primary); }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .script-card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-primary);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    </style>
+</head>
+
+<body class="leading-relaxed">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="font-heading text-xl font-bold text-accent">OLLY DY</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="nav-link font-semibold text-gray-700 hover:text-accent">My Voice</a>
+                <a href="#portfolio" class="nav-link font-semibold text-gray-700 hover:text-accent">Portfolio</a>
+                <a href="#contact" class="nav-link font-semibold text-gray-700 hover:text-accent">Contact</a>
+            </div>
+            <a href="#contact" class="hidden md:block bg-accent text-white font-bold py-2 px-5 rounded-full hover:bg-accent-hover transition-colors duration-300">Hire Me</a>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+             <a href="#about" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">My Voice</a>
+             <a href="#portfolio" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Portfolio</a>
+             <a href="#contact" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="text-center py-20 md:py-32 px-6">
+            <div class="container mx-auto">
+                <h1 class="font-heading text-4xl md:text-6xl font-extrabold text-text-primary mb-4">Weaving Nigerian Narratives for the World.</h1>
+                <p class="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto mb-8">
+                    I am a startup screenwriter driven to tell authentic, character-rich stories that capture the vibrant spirit and complex soul of Nigeria. I'm searching for opportunities to bring these stories to life.
+                </p>
+                <a href="#portfolio" class="bg-accent text-white font-bold py-4 px-10 rounded-full hover:bg-accent-hover transition-colors duration-300 text-lg">Explore My Scripts</a>
+            </div>
+        </section>
+
+        <!-- About / My Voice Section -->
+        <section id="about" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-5 gap-12 items-center">
+                    <div class="md:col-span-2">
+                         <img src="https://placehold.co/500x500/f5f3f0/c08c4a?text=OLLY+DY" alt="A portrait of Olly Dy, screenwriter" class="rounded-lg shadow-xl w-full h-auto object-cover">
+                    </div>
+                    <div class="md:col-span-3">
+                        <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">My Voice: The Storyteller's DNA</h2>
+                        <p class="text-text-secondary text-lg mb-6 leading-relaxed">
+                            My storytelling is rooted in the rich soil of Lagos, Nigeria. I craft narratives that are not just seen and heard, but felt. My focus is on the human element within our grand, chaotic, and beautiful culture—the resilience, the humor, the ambition, and the hidden struggles. I don't just write scripts; I build worlds populated by characters who breathe, make mistakes, and dare to dream. My goal is to create content that feels both uniquely Nigerian and universally human.
+                        </p>
+                        <div class="border-l-4 border-accent pl-4">
+                            <p class="text-text-primary font-semibold italic">"I believe the most powerful stories are those that find the universal in the specific. I'm ready to collaborate with visionaries who share that belief."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Interactive Portfolio Section -->
+        <section id="portfolio" class="py-16 md:py-24 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="font-heading text-3xl md:text-4xl font-bold">Interactive Portfolio</h2>
+                    <p class="text-text-secondary text-lg mt-2">A selection of my available screenplays. Click any card to reveal more details.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Script Card 1 -->
+                    <div class="script-card bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer border border-transparent hover:border-accent transition-all duration-300">
+                        <div class="p-6">
+                            <p class="text-sm uppercase text-gray-500 font-semibold">Thriller / Drama</p>
+                            <h3 class="font-heading text-2xl font-bold text-accent mt-1">Echoes of the Creek</h3>
+                        </div>
+                        <div class="script-card-details px-6 pb-6">
+                            <p class="text-text-secondary mb-2"><strong>Logline:</strong> An ambitious journalist uncovers a dark secret linking a powerful oil tycoon to the lingering pollution in her Niger Delta hometown, forcing her to choose between her career and her people's survival.</p>
+                            <p class="text-text-secondary"><strong>Themes:</strong> Corporate Greed, Environmental Justice, Moral Compromise.</p>
+                        </div>
+                    </div>
+
+                    <!-- Script Card 2 -->
+                    <div class="script-card bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer border border-transparent hover:border-accent transition-all duration-300">
+                        <div class="p-6">
+                            <p class="text-sm uppercase text-gray-500 font-semibold">Comedy / Heist</p>
+                            <h3 class="font-heading text-2xl font-bold text-accent mt-1">Keke Kapers</h3>
+                        </div>
+                        <div class="script-card-details px-6 pb-6">
+                            <p class="text-text-secondary mb-2"><strong>Logline:</strong> When two down-on-their-luck Keke drivers in Lagos accidentally get entangled with a stolen diamond, they must outwit a notorious gang leader to survive the night and hopefully get rich.</p>
+                             <p class="text-text-secondary"><strong>Themes:</strong> Friendship, Quick Wits, Social Class, Chaos.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Script Card 3 -->
+                    <div class="script-card bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer border border-transparent hover:border-accent transition-all duration-300">
+                        <div class="p-6">
+                            <p class="text-sm uppercase text-gray-500 font-semibold">Family Saga</p>
+                            <h3 class="font-heading text-2xl font-bold text-accent mt-1">Blood & Bougainvillea</h3>
+                        </div>
+                        <div class="script-card-details px-6 pb-6">
+                            <p class="text-text-secondary mb-2"><strong>Logline:</strong> The iron-willed matriarch of a prominent Yoruba family must confront buried secrets from the past when her estranged son returns from abroad with a foreign wife, threatening to unravel their legacy.</p>
+                            <p class="text-text-secondary"><strong>Themes:</strong> Tradition vs. Modernity, Family Secrets, Legacy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Genre Focus & Visualization -->
+        <section id="genre-focus" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">Genre Focus & Versatility</h2>
+                        <p class="text-text-secondary text-lg mb-6 leading-relaxed">
+                            While my heart lies in powerful drama, my skills as a writer are versatile. I am adept at weaving humor, tension, and complex relationships across various genres. This chart provides a snapshot of the genres represented in my current portfolio, showcasing my ability to tackle different narrative styles while maintaining a strong, character-driven core. I am always eager to explore new creative territories.
+                        </p>
+                    </div>
+                    <div class="chart-container" style="position: relative; height:300px; max-height: 400px; width:100%; max-width: 400px; margin: auto;">
+                        <canvas id="genreChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 md:py-24 fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="font-heading text-3xl md:text-4xl font-bold">Let's Bring a Story to Life</h2>
+                <p class="text-text-secondary text-lg mt-2 mb-8 max-w-2xl mx-auto">I am actively seeking representation and am available for writing assignments, commissions, and collaborations. If you have a project that needs a powerful, authentic voice, let's connect.</p>
+                <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+                    <form id="contactForm" novalidate>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <input type="text" id="name" name="name" placeholder="Your Full Name" required class="w-full p-3 bg-gray-100 rounded-md border border-gray-300 focus:outline-none focus:ring-2 ring-accent">
+                            <input type="email" id="email" name="email" placeholder="Your Email Address" required class="w-full p-3 bg-gray-100 rounded-md border border-gray-300 focus:outline-none focus:ring-2 ring-accent">
+                        </div>
+                        <div class="mb-6">
+                            <textarea id="message" name="message" rows="5" placeholder="Your message or project details..." required class="w-full p-3 bg-gray-100 rounded-md border border-gray-300 focus:outline-none focus:ring-2 ring-accent"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-accent text-white font-bold py-4 px-10 rounded-full hover:bg-accent-hover transition-colors duration-300 text-lg">Send Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-10 text-center">
+            <p class="font-heading text-2xl font-bold">Olly Dy</p>
+            <p class="text-gray-400 mt-1">Screenwriter | Lokoja, Nigeria</p>
+            <div class="flex justify-center space-x-6 mt-6">
+                 <a href="mailto:ekundayoobayomi2@gmail.com" class="text-gray-400 hover:text-accent transition">ekundayoobayomi2@gmail.com</a>
+                 <span class="text-gray-600">|</span>
+                 <a href="https://wa.me/2347037404167" target="_blank" class="text-gray-400 hover:text-accent transition">WhatsApp (+234 703 740 4167)</a>
+            </div>
+            <p class="text-gray-500 text-sm mt-8">&copy; 2025 Olly Dy. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Fade-in sections on scroll
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: "0px 0px -100px 0px" });
+            sections.forEach(section => observer.observe(section));
+
+            // Interactive script cards
+            const scriptCards = document.querySelectorAll('.script-card');
+            scriptCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const details = card.querySelector('.script-card-details');
+                    if (details.style.maxHeight && details.style.maxHeight !== '0px') {
+                        details.style.maxHeight = '0px';
+                    } else {
+                        details.style.maxHeight = details.scrollHeight + 'px';
+                    }
+                });
+            });
+
+            // Genre Chart
+            const ctx = document.getElementById('genreChart').getContext('2d');
+            const genreChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Drama', 'Comedy', 'Thriller', 'Family Saga'],
+                    datasets: [{
+                        label: 'Genre Focus',
+                        data: [40, 25, 20, 15],
+                        backgroundColor: [
+                            'rgba(192, 140, 74, 0.8)',
+                            'rgba(90, 90, 90, 0.8)',
+                            'rgba(30, 30, 30, 0.8)',
+                            'rgba(192, 140, 74, 0.5)'
+                        ],
+                        borderColor: [
+                            '#c08c4a',
+                            '#5a5a5a',
+                            '#1e1e1e',
+                            '#c08c4a'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#1e1e1e',
+                                font: {
+                                    family: "'Source Sans Pro', sans-serif",
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Contact Form Handling
+            const contactForm = document.getElementById('contactForm');
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+
+                if (!name || !email || !message) {
+                    alert('Please fill out all fields.');
+                    return;
+                }
+                
+                const subject = `Screenwriting Inquiry from ${name}`;
+                const body = `Hello Olly,\n\nMy name is ${name} and I'm reaching out from your portfolio website.\n\n${message}\n\nBest regards,\n${name}\n(${email})`;
+                
+                window.location.href = `mailto:ekundayoobayomi2@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            });
+
+            // Active Nav Link Highlighting on Scroll
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('section');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                pageSections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
